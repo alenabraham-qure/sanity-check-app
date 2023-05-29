@@ -21,44 +21,49 @@ def show_firewall_status():
     firewall_label.config(text=firewall_status)
 
 def show_network_status():
-    network_status = "Connected" if network_check.perform_network_check() else "Disconnected"
-    network_status_label.config(text=network_status)
+    connected, speed = network_check.check_network_speed()
+    if connected:
+        network_status_label.config(text=f"Connected - Speed: {speed} Mbps")
+    else:
+        network_status_label.config(text="Not Connected")
 
 def clear_results():
     system_info_label.config(text="")
     firewall_label.config(text="")
     network_status_label.config(text="")
 
-# Create the main window
-window = tk.Tk()
-window.title("Sanity Check")
-window.geometry("400x300")
+def create_window():
+    global system_info_label, firewall_label, network_status_label
 
-# Create buttons to trigger the checks
-network_button = tk.Button(window, text="Check Network Status", command=show_network_status)
-network_button.pack(pady=10)
+    # Create the main window
+    window = tk.Tk()
+    window.title("Sanity Check")
+    window.geometry("600x500")
 
-# Create labels for network check
-network_status_label = tk.Label(window, text="Network Check")
-network_status_label.pack(pady=10)
+    # Create buttons to trigger the checks
+    network_button = tk.Button(window, text="Check Network Status", command=show_network_status)
+    network_button.pack(pady=10)
 
-# Create buttons to trigger the checks
-system_info_button = tk.Button(window, text="Check System Info", command=show_system_info)
-system_info_button.pack(pady=10)
+    # Create labels for network check
+    network_status_label = tk.Label(window, text="Network Check")
+    network_status_label.pack(pady=10)
 
-# Create labels for system information
-system_info_label = tk.Label(window, text="System Information:")
-system_info_label.pack(pady=10)
+    # Create buttons to trigger the checks
+    system_info_button = tk.Button(window, text="Check System Info", command=show_system_info)
+    system_info_button.pack(pady=10)
 
-firewall_button = tk.Button(window, text="Check Firewall Status", command=show_firewall_status)
-firewall_button.pack(pady=10)
+    # Create labels for system information
+    system_info_label = tk.Label(window, text="System Information:")
+    system_info_label.pack(pady=10)
 
-# Create labels for firewall status
-firewall_label = tk.Label(window, text="Firewall Status:")
-firewall_label.pack(pady=10)
+    firewall_button = tk.Button(window, text="Check Firewall Status", command=show_firewall_status)
+    firewall_button.pack(pady=10)
 
-clear_button = tk.Button(window, text="Clear Results", command=clear_results)
-clear_button.pack(pady=10)
+    # Create labels for firewall status
+    firewall_label = tk.Label(window, text="Firewall Status:")
+    firewall_label.pack(pady=10)
 
-# Start the GUI event loop
-window.mainloop()
+    clear_button = tk.Button(window, text="Clear Results", command=clear_results)
+    clear_button.pack(pady=10)
+
+    return window
